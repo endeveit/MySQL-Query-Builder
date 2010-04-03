@@ -788,21 +788,28 @@ class ExpressionParameter
 {
     private
         $field,
-        $expression;
+        $operation,
+        $content;
 
-    public function __construct($field, $expression)
+    public function __construct($field, $operation, $content)
     {
         if (!$field instanceof MQB_Field) {
             throw new InvalidArgumentException('field should be MQB_Field');
         }
 
-        $this->field      = $field;
-        $this->expression = $expression;
+        $this->field     = $field;
+        $this->operation = $operation;
+        $this->content = $content;
     }
 
     public function getSql(array &$parameters)
     {
-        return $this->field->getSql($parameters) . $this->expression;
+        $number = count($parameters) + 1;
+
+        $key = sprintf(':p%d', $number);
+        $parameters[$key] = $this->content;
+
+        return $this->field->getSql($parameters) . $this->operation . $key;
     }
 
 }
