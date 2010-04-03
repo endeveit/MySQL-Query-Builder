@@ -89,6 +89,9 @@ class UpdateQuery extends BasicQuery
 
                 $this->set_fields[] = $value[0];
                 $this->set_values[] = new Parameter($value[1]);
+            } else if (is_object($value) && $value instanceof ExpressionParameter) {
+                $this->set_fields[] = new Field($set);
+                $this->set_values[] = $value;
             } else {
                 // key-value pairs
                 $this->set_fields[] = new Field($set);

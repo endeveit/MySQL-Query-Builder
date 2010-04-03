@@ -771,3 +771,38 @@ class Parameter
         return $this->content;
     }
 }
+
+/**
+ * Class, which represents expression parameter in SQL-queries.
+ * Value is always used in query directly.
+ * Common usage:
+ *  $q = new UpdateQuery('test');
+ *  $q->setValues(array(
+ *      'field' => new ExpressionParameter(new Field('field'), '+ 1'),
+ *  ));
+ *  echo $q->sql(); // UPDATE `test` AS `t0` SET `t0`.`field` = `t0`.`field` + 1
+ *
+ * @package mysql-query-builder
+ */
+class ExpressionParameter
+{
+    private
+        $field,
+        $expression;
+
+    public function __construct($field, $expression)
+    {
+        if (!$field instanceof MQB_Field) {
+            throw new InvalidArgumentException('field should be MQB_Field');
+        }
+
+        $this->field      = $field;
+        $this->expression = $expression;
+    }
+
+    public function getSql(array &$parameters)
+    {
+        return $this->field->getSql($parameters) . $this->expression;
+    }
+
+}
