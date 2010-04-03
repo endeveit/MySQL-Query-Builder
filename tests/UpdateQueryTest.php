@@ -154,4 +154,16 @@ class UpdateQueryTest extends PHPUnit_Framework_TestCase
 
         $this->assertEquals('UPDATE `test` AS `t0` SET `t0`.`foo` = :p1, `t0`.`baz` = :p2', $sql);
     }
+
+    public function testExpressionParameters()
+    {
+        $q = new UpdateQuery('test');
+        $q->setValues(array(
+            'foo' => new ExpressionParameter(new Field('foo'), '+', 1),
+        ));
+
+        $sql = $q->sql();
+
+        $this->assertEquals('UPDATE `test` AS `t0` SET `t0`.`foo` = `t0`.`foo` + :p1', $sql);
+    }
 }

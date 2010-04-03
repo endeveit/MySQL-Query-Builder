@@ -778,7 +778,7 @@ class Parameter
  * Common usage:
  *  $q = new UpdateQuery('test');
  *  $q->setValues(array(
- *      'field' => new ExpressionParameter(new Field('field'), '+ 1'),
+ *      'foo' => new ExpressionParameter(new Field('foo'), '+', 1),
  *  ));
  *  echo $q->sql(); // UPDATE `test` AS `t0` SET `t0`.`field` = `t0`.`field` + 1
  *
@@ -799,7 +799,7 @@ class ExpressionParameter
 
         $this->field     = $field;
         $this->operation = $operation;
-        $this->content = $content;
+        $this->content   = $content;
     }
 
     public function getSql(array &$parameters)
@@ -809,7 +809,12 @@ class ExpressionParameter
         $key = sprintf(':p%d', $number);
         $parameters[$key] = $this->content;
 
-        return $this->field->getSql($parameters) . $this->operation . $key;
+        return sprintf(
+            '%s %s %s',
+            $this->field->getSql($parameters),
+            $this->operation,
+            $key
+        );
     }
 
 }

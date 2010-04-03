@@ -51,7 +51,8 @@ function mqb_autoload($class_name)
             'Field' => 'additional.php',
             'sqlFunction' => 'additional.php',
             'Aggregate' => 'additional.php',
-            'Parameter' => 'additional.php'
+            'Parameter' => 'additional.php',
+            'ExpressionParameter' => 'additional.php'
         );
     }
 
